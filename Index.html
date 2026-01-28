@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Estado del trámite</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --azul:#0b3b60;
+  --azul-oscuro:#062f4f;
+  --borde:#d9d9d9;
+  --amarillo:#f5b400;
+  --verde:#1a73e8;
+  --gris:#f4f4f4;
+}
+
+*{box-sizing:border-box;font-family:'Montserrat',sans-serif}
+body{margin:0;background:#fff}
+
+.contenedor{
+  max-width:520px;
+  margin:auto;
+  padding:40px 24px 60px;
+}
+
+/* ---------- HEADER ---------- */
+.logo{text-align:center;margin-bottom:30px}
+.logo img{height:45px}
+
+h1{
+  text-align:center;
+  font-size:26px;
+  color:var(--azul);
+  font-weight:700;
+}
+
+.breadcrumb{
+  margin:28px 0 32px;
+  font-size:14px;
+  color:#9a9a9a;
+}
+.breadcrumb span{color:#4a4a4a;font-weight:500}
+
+/* ---------- FORM ---------- */
+label{font-weight:600;color:var(--azul)}
+input{
+  width:100%;
+  padding:18px 20px;
+  border-radius:40px;
+  border:2px solid var(--azul);
+  font-size:15px;
+}
+
+.error{
+  margin-top:8px;
+  color:var(--amarillo);
+  font-size:14px;
+  display:none;
+}
+
+.captcha-title{
+  margin-top:28px;
+  font-weight:600;
+  font-size:14px;
+  color:#4a4a4a;
+}
+
+.captcha-box{
+  margin-top:12px;
+  border:1px solid var(--borde);
+  padding:14px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.captcha-left{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  cursor:pointer;
+}
+
+.captcha-square{
+  width:22px;
+  height:22px;
+  border:2px solid #bdbdbd;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.spinner{
+  width:16px;
+  height:16px;
+  border:3px solid #cfcfcf;
+  border-top:3px solid var(--verde);
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+}
+
+@keyframes spin{100%{transform:rotate(360deg)}}
+
+.check{color:var(--verde);font-size:18px;font-weight:bold}
+
+.captcha-logo{
+  text-align:right;
+  font-size:10px;
+  color:#7a7a7a;
+}
+.captcha-logo strong{
+  display:block;
+  font-size:12px;
+  color:#4a4a4a;
+}
+
+.btn{
+  margin-top:36px;
+  width:100%;
+  background:var(--azul-oscuro);
+  color:#fff;
+  border:none;
+  padding:18px;
+  border-radius:40px;
+  font-size:16px;
+  font-weight:600;
+}
+
+/* ---------- INFO ---------- */
+.info{
+  margin-top:56px;
+  text-align:center;
+}
+.info h2{color:var(--azul)}
+.info p{font-size:14px;color:#4f4f4f}
+
+/* ---------- RESULTADO ---------- */
+.texto-resultado{
+  display:none;
+  margin-top:40px;
+  font-size:15px;
+  color:#4a4a4a;
+  text-align:center;
+}
+
+.resultado{
+  display:none;
+  margin-top:14px;
+  border:1px solid var(--borde);
+}
+
+.fila{
+  padding:14px;
+  border-bottom:1px solid var(--borde);
+  text-align:center;
+}
+.fila.gris{background:var(--gris)}
+.fila strong{display:block;color:#555}
+.fila span{display:block;margin-top:6px}
+
+/* ---------- FOOTER AZUL ---------- */
+.footer{
+  background:#0b3b60;
+  color:#fff;
+  padding:40px 24px;
+}
+
+.footer .wrap{
+  max-width:1100px;
+  margin:auto;
+}
+
+.footer-top{
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+}
+
+.footer-logo img{
+  height:48px;
+}
+
+.footer p{
+  font-size:13px;
+  line-height:1.6;
+  opacity:.9;
+}
+
+.footer-links{
+  margin-top:20px;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+}
+
+.footer-links a{
+  color:#fff;
+  font-size:13px;
+  text-decoration:none;
+  opacity:.85;
+}
+
+.footer-links a:hover{opacity:1}
+
+.footer-bottom{
+  margin-top:30px;
+  font-size:12px;
+  opacity:.8;
+}
+
+@media(min-width:768px){
+  .footer-top{
+    flex-direction:row;
+    justify-content:space-between;
+  }
+  .footer-links{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+  <div class="logo">
+    <img src="Logo.png">
+  </div>
+
+  <h1>ESTADO DEL TRÁMITE DEL<br>DOCUMENTO DE IDENTIDAD</h1>
+
+  <div class="breadcrumb"><span>Inicio</span> / Consultar</div>
+
+  <label>No. Identificación:</label>
+  <input id="doc" type="text" placeholder="digíte el número sin puntos ni comas">
+  <div class="error" id="errorMsg"></div>
+
+  <div class="captcha-title">MARQUE EL CUADRO DE VERIFICACIÓN:</div>
+
+  <div class="captcha-box">
+    <div class="captcha-left" id="captcha">
+      <div class="captcha-square" id="box"></div>
+      <span>No soy un robot</span>
+    </div>
+    <div class="captcha-logo">
+      <strong>reCAPTCHA</strong>
+      Privacidad - Condiciones
+    </div>
+  </div>
+
+  <button class="btn" id="consultar">CONSULTAR</button>
+
+  <div class="info" id="info">
+    <h2>INFORMACIÓN</h2>
+    <p>Para consultar su número de identidad, marque el captcha y dé clic en el botón consultar.</p>
+  </div>
+
+  <div class="texto-resultado" id="textoResultado"></div>
+
+  <div class="resultado" id="resultado">
+    <div class="fila gris">
+      <strong>NO. DE PREPARACIÓN</strong>
+      <span>8517029473</span>
+    </div>
+    <div class="fila gris">
+      <strong>FECHA</strong>
+      <span>19 de enero de 2026</span>
+    </div>
+    <div class="fila gris">
+      <strong>OFICINA</strong>
+      <span>PEREIRA - RISARALDA</span>
+    </div>
+    
+    <div class="fila gris">
+      <strong></strong>
+       <strong> Su trámite se encuentra en verificación de 
+        información, validación y elaboración, etapas
+        necesarias para la expedición de su documento 
+        de identidad, proceso normal de producción. 
+        Por favor vuelva a realizar la consulta en los 
+        próximos días para validar el avance 
+        del documento.<strong>
+    </div>
+    
+  </div>
+
+</div>
+
+<!-- FOOTER AZUL -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-logo">
+        <img src="Logo2.png">
+        <p>Av. Calle 26 n.º 51-50, CAN<br>Bogotá, Colombia</p>
+      </div>
+
+      <div class="footer-links">
+        <a>Políticas de privacidad</a>
+        <a>Correo institucional</a>
+        <a>Condiciones de uso</a>
+        <a>Mapa del sitio</a>
+        <a>Contáctenos</a>
+        <a>Biblioteca</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      © Copyright Registraduría Nacional del Estado Civil
+    </div>
+  </div>
+</footer>
+
+<script>
+const NUMERO_VALIDO="1140064273";
+const doc=document.getElementById("doc");
+const error=document.getElementById("errorMsg");
+const textoResultado=document.getElementById("textoResultado");
+const resultado=document.getElementById("resultado");
+
+doc.addEventListener("input",()=>doc.value=doc.value.replace(/\D/g,""));
+
+let verified=false;
+const captcha=document.getElementById("captcha");
+const box=document.getElementById("box");
+
+captcha.onclick=()=>{
+  if(verified)return;
+  box.innerHTML='<div class="spinner"></div>';
+  setTimeout(()=>{
+    box.innerHTML='<span class="check">✔</span>';
+    verified=true;
+  },5000);
+};
+
+document.getElementById("consultar").onclick=()=>{
+  if(!verified||!doc.value)return;
+  document.getElementById("info").style.display="none";
+  setTimeout(()=>{
+    textoResultado.innerHTML=
+      doc.value===NUMERO_VALIDO
+      ?`El documento <strong>${doc.value}</strong> presenta la(s) siguiente(s) solicitud(es):`
+      :`El documento <strong>${doc.value}</strong> no está en proceso de trámite.`;
+    textoResultado.style.display="block";
+    if(doc.value===NUMERO_VALIDO)resultado.style.display="block";
+  },3000);
+};
+</script>
+
+</body>
+</html>
